@@ -62,3 +62,4 @@ window.onload = function() {
         });
     });
 };
+console.log("Fetching data from Firestore...");
