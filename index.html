@@ -6,7 +6,6 @@
     <title>Input Numbers</title>
     <!-- Load Firebase App and Firestore libraries -->
     <script type="module">
-        // Import the necessary Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js";
 
@@ -25,7 +24,7 @@
         const db = getFirestore(app);
 
         // Function to handle form submission
-        async function submitData() {
+        window.submitData = async function() {
             const num1 = parseFloat(document.getElementById("num1").value);
             const num2 = parseFloat(document.getElementById("num2").value);
             const num3 = parseFloat(document.getElementById("num3").value);
@@ -41,12 +40,12 @@
             } catch (error) {
                 console.error("Error adding document: ", error);
             }
-        }
+        };
 
         // Function to reset the form
-        function resetForm() {
+        window.resetForm = function() {
             document.getElementById("number-form").reset();
-        }
+        };
     </script>
 </head>
 <body>
