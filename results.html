@@ -4,11 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Results</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js"></script>
+    <script>
+        // Your Firebase configuration here
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjQ0bA4lVhBmPrpU41uqnWfwjmLMihzYk",
+        authDomain: "kmxsalud-database.firebaseapp.com",
+        projectId: "kmxsalud-database",
+        storageBucket: "kmxsalud-database.appspot.com",
+        messagingSenderId: "216946537560",
+        appId: "1:216946537560:web:02019702598e3571bc062d"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Fetching data on page load
+        window.onload = function() {
+            db.collection("numbers").get().then((querySnapshot) => {
+                let tableBody = document.getElementById("table-body");
+                tableBody.innerHTML = ""; // Clear the table before adding new data
+                if (querySnapshot.empty) {
+                    console.log("No data found!");
+                }
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    console.log(data); // Log each document's data
+                    const sum = data.num1 + data.num2 + data.num3;
+                    const row = `<tr>
+                        <td>${data.num1}</td>
+                        <td>${data.num2}</td>
+                        <td>${data.num3}</td>
+                        <td>${sum}</td>
+                    </tr>`;
+                    tableBody.innerHTML += row; // Append the new row
+                });
+            }).catch((error) => {
+                console.error("Error fetching data: ", error);
+            });
+        };
+    </script>
 </head>
 <body>
-    <h1>Results</h1>
-    <table id="resultsTable">
+    <table>
         <thead>
             <tr>
                 <th>Number 1</th>
@@ -17,32 +57,9 @@
                 <th>Sum</th>
             </tr>
         </thead>
-        <tbody id="tableBody"></tbody>
+        <tbody id="table-body">
+            <!-- Data will be populated here -->
+        </tbody>
     </table>
-
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-    <script src="script.js"></script>
-    <script type="text/javascript">
-        // Fetching data from Firestore
-db.collection("numbers").get().then((querySnapshot) => {
-    let tableBody = document.getElementById("table-body");
-    tableBody.innerHTML = ""; // Clear the table before adding new data
-    querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const sum = data.num1 + data.num2 + data.num3;
-        const row = `<tr>
-            <td>${data.num1}</td>
-            <td>${data.num2}</td>
-            <td>${data.num3}</td>
-            <td>${sum}</td>
-        </tr>`;
-        tableBody.innerHTML += row; // Append the new row
-    });
-}).catch((error) => {
-    console.error("Error fetching data: ", error);
-});
-
-    </script>
 </body>
 </html>
