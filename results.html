@@ -23,5 +23,26 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <script src="script.js"></script>
+    <script type="text/javascript">
+        // Fetching data from Firestore
+db.collection("numbers").get().then((querySnapshot) => {
+    let tableBody = document.getElementById("table-body");
+    tableBody.innerHTML = ""; // Clear the table before adding new data
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const sum = data.num1 + data.num2 + data.num3;
+        const row = `<tr>
+            <td>${data.num1}</td>
+            <td>${data.num2}</td>
+            <td>${data.num3}</td>
+            <td>${sum}</td>
+        </tr>`;
+        tableBody.innerHTML += row; // Append the new row
+    });
+}).catch((error) => {
+    console.error("Error fetching data: ", error);
+});
+
+    </script>
 </body>
 </html>
