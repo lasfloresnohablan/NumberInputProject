@@ -5,44 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Input Numbers</title>
     <!-- Load Firebase App and Firestore libraries -->
-    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js"></script>
-    <script>
+    <script type="module">
+        // Import Firebase libraries
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js";
+
         // Your Firebase configuration here
         const firebaseConfig = {
-             apiKey: "AIzaSyCjQ0bA4lVhBmPrpU41uqnWfwjmLMihzYk",
-        authDomain: "kmxsalud-database.firebaseapp.com",
-        projectId: "kmxsalud-database",
-        storageBucket: "kmxsalud-database.appspot.com",
-        messagingSenderId: "216946537560",
-        appId: "1:216946537560:web:02019702598e3571bc062d"
+            apiKey: "AIzaSyCjQ0bA4lVhBmPrpU41uqnWfwjmLMihzYk",
+            authDomain: "kmxsalud-database.firebaseapp.com",
+            projectId: "kmxsalud-database",
+            storageBucket: "kmxsalud-database.appspot.com",
+            messagingSenderId: "216946537560",
+            appId: "1:216946537560:web:02019702598e3571bc062d"
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         // Function to handle form submission
-        function submitData() {
+        window.submitData = async function () {
             const num1 = parseFloat(document.getElementById("num1").value);
             const num2 = parseFloat(document.getElementById("num2").value);
             const num3 = parseFloat(document.getElementById("num3").value);
 
-            db.collection("numbers").add({
-                num1: num1,
-                num2: num2,
-                num3: num3
-            }).then(() => {
+            try {
+                await addDoc(collection(db, "numbers"), {
+                    num1: num1,
+                    num2: num2,
+                    num3: num3
+                });
                 alert("Data submitted successfully!");
                 // Optionally, reset the form
                 document.getElementById("number-form").reset();
-            }).catch((error) => {
+            } catch (error) {
                 console.error("Error adding document: ", error);
-            });
+            }
         }
 
         // Function to reset the form
-        function resetForm() {
+        window.resetForm = function () {
             document.getElementById("number-form").reset();
         }
     </script>
