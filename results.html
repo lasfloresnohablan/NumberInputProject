@@ -4,51 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Results</title>
-    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js"></script>
-    <script>
-        // Your Firebase configuration here
+    <!-- Load Firebase App and Firestore libraries -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore.js";
+
+        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCjQ0bA4lVhBmPrpU41uqnWfwjmLMihzYk",
-        authDomain: "kmxsalud-database.firebaseapp.com",
-        projectId: "kmxsalud-database",
-        storageBucket: "kmxsalud-database.appspot.com",
-        messagingSenderId: "216946537560",
-        appId: "1:216946537560:web:02019702598e3571bc062d"
+            authDomain: "kmxsalud-database.firebaseapp.com",
+            projectId: "kmxsalud-database",
+            storageBucket: "kmxsalud-database.appspot.com",
+            messagingSenderId: "216946537560",
+            appId: "1:216946537560:web:02019702598e3571bc062d"
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        // Fetching data on page load
-        window.onload = function() {
-            db.collection("numbers").get().then((querySnapshot) => {
-                let tableBody = document.getElementById("table-body");
-                tableBody.innerHTML = ""; // Clear the table before adding new data
-                if (querySnapshot.empty) {
-                    console.log("No data found!");
-                }
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    console.log(data); // Log each document's data
-                    const sum = data.num1 + data.num2 + data.num3;
-                    const row = `<tr>
-                        <td>${data.num1}</td>
-                        <td>${data.num2}</td>
-                        <td>${data.num3}</td>
-                        <td>${sum}</td>
-                    </tr>`;
-                    tableBody.innerHTML += row; // Append the new row
-                });
-            }).catch((error) => {
-                console.error("Error fetching data: ", error);
+        // Function to fetch and display data
+        window.onload = async function() {
+            const resultsContainer = document.getElementById("results");
+            const querySnapshot = await getDocs(collection(db, "numbers"));
+            let tableRows = "";
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const sum = data.num1 + data.num2 + data.num3;
+                tableRows += `<tr>
+                                <td>${data.num1}</td>
+                                <td>${data.num2}</td>
+                                <td>${data.num3}</td>
+                                <td>${sum}</td>
+                              </tr>`;
             });
-        };
+
+            resultsContainer.innerHTML = tableRows;
+        }
     </script>
 </head>
 <body>
-    <table>
+    <h1>Results</h1>
+    <table border="1">
         <thead>
             <tr>
                 <th>Number 1</th>
@@ -57,8 +55,8 @@
                 <th>Sum</th>
             </tr>
         </thead>
-        <tbody id="table-body">
-            <!-- Data will be populated here -->
+        <tbody id="results">
+            <!-- Results will be displayed here -->
         </tbody>
     </table>
 </body>
